@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  web:
+    build: ./TypeScript-Node-Starter
+    ports:
+      - "3000:3000"
+    environment:
+      MONGODB_URI: "mongodb://root:Password1xxx!@maindbtest:27017/"
+      MONGODB_URI_LOCAL: "mongodb://root:Password1xxx!@maindbtest:27017/"
+      SESSION_SECRET: sessionsecret
+      FACEBOOK_ID: facebookID
+      FACEBOOK_SECRET: facebooksecret
+      SENDGRID_USER: myusername
+      SENDGRID_PASSWORD: mysecurepassword
+      PORT: 3000
+  maindbtest:
+    image: mongo:4.4.6
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: Password1xxx!
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo maindbtest:27017/test --quiet
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      # start_period: 30s
+    volumes:
+      - maindb6:/data/db
+    ports:
+      - 27017:27017
+    volumes:
+      - maindbtest:/data/db
+volumes:
+  maindbtest:
